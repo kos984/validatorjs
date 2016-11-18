@@ -494,10 +494,13 @@ Validator.stopOnError = function(attributes) {
  * @param  {string}   message
  * @return {void}
  */
-Validator.register = function(name, fn, message) {
+Validator.register = function(name, fn, message, implicit) {
   var lang = Validator.getDefaultLang();
   Rules.register(name, fn);
   Lang._setRuleMessage(lang, name, message);
+  if (implicit) {
+    Rules.implicitRules.push(name);
+  }
 };
 
 /**

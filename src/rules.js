@@ -13,9 +13,22 @@ var rules = {
 
   required_if: function(val, req, attribute) {
     req = this.getParameters();
-    if (this.validator.input[req[0]] === req[1]) {
+    if (this.validator._objectPath(this.validator.input, req[0]) === req[1]) {
       return this.validator.getRule('required').validate(val);
     }
+
+    return true;
+  },
+
+  required_with: function(val, req, attribute) {
+    req = this.getParameters();
+    for (var i = 0; i < req.length; i++) {
+      if (Object.prototype.hasOwnProperty.call(this.validator.input, req[i])) {
+        return this.validator.getRule('required').validate(val);
+      }
+    }
+
+    console.log('return true; ...');
 
     return true;
   },
@@ -371,7 +384,7 @@ var manager = {
    *
    * @type {Array}
    */
-  implicitRules: ['required', 'required_if', 'accepted'],
+  implicitRules: ['required', 'required_if', 'required_with', 'required_with_all', 'required_without', 'required_without_all', 'accepted'],
 
   /**
    * Get rule by name
